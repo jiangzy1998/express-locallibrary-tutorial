@@ -1,7 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb+srv://jzy:1234567890@cluster0.hya45oi.mongodb.net/local_library';
+const mongoDB = 'mongodb+srv://jzy:12@cluster0.hya45oi.mongodb.net/local_library';
 
 mongoose.connect(mongoDB, { useNewUrlParser: true , useUnifiedTopology: true });
 const db = mongoose.connection;
@@ -11,8 +11,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const catalogRouter = require('./routes/catalog'); 
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/catalog', catalogRouter); 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
