@@ -1,7 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb+srv://jzy:12@cluster0.hya45oi.mongodb.net/local_library';
+const mongoDB = 'mongodb+srv://jzy:1234567890@cluster0.hya45oi.mongodb.net/local_library';
 
 mongoose.connect(mongoDB, { useNewUrlParser: true , useUnifiedTopology: true });
 const db = mongoose.connection;

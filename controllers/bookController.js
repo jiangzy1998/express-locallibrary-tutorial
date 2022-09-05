@@ -2,7 +2,6 @@ const Book = require('../models/book');
 const Author = require('../models/author');
 const Genre = require('../models/genre');
 const BookInstance = require('../models/bookinstance');
-
 const async = require('async');
 
 exports.index = (req, res) => {
@@ -22,8 +21,8 @@ exports.index = (req, res) => {
     genre_count: function (callback) {
       Genre.count({}, callback);
     },
-  }, function(err, results){
-    res.render("index",{ title:"Local Library Home", error:err, data:results })
+  }, function (err, results) {
+    res.render("index", { title: "Local Library Home", error: err, data: results })
   });
 };
 
@@ -33,8 +32,28 @@ exports.book_list = (req, res) => {
 };
 
 // Display detail page for a specific book.
-exports.book_detail = (req, res) => {
-  res.send(`NOT IMPLEMENTED: Book detail: ${req.params.id}`);
+exports.book_detail = (req, res, next) => {
+  async.parallel({
+    book: function (callback) {
+      Book.findById(req.params.id)
+        .populate('author')
+        .populate('genre')
+        .exec(callback);
+    },
+    book_instance: function (callback) {
+      BookInstance.find({ 'book': req.params.id })
+        .exec(callback);
+    },
+  }, function (err, results) {
+    if (err) { return next(err); }
+    if (results.book == null) { // No results.
+      var err = new Error('Book not found');
+      err.status = 404;
+      return next(err);
+    }
+    // Successful, so render.
+    res.render('book_detail', { title: 'Title', book: results.book, book_instances: results.book_instance });
+  })
 };
 
 // Display book create form on GET.
